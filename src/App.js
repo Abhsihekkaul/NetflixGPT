@@ -1,15 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client"
+import Body from "./components/Body";
 
-const AppRoute = () => {
+const App = () => {
     return(
         <>
-
-            <h1 className="text-3xl text-green-500">Hello world!</h1>
-        
+            <Body />
         </>
     )
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppRoute />)
+root.render(<App />)
