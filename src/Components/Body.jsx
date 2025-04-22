@@ -8,10 +8,10 @@ import Login from './Login';
 
 const Body = () => {
     const Approuter = createBrowserRouter([
-        {
-          path: "/",
-          element: <Login />,
-        },
+      ...['/', '/login'].map((path) => ({
+        path: path,
+        element: <Login />,
+      })),
         {
             path: '/Browse',
             element : <Browse />

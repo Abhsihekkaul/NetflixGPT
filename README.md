@@ -1,6 +1,8 @@
 # Completed Steps 
     - Setup through Vite 
     - Configuration of Tailwind CSS
+    - configured the routing 
+    - 
 
 
 # work in progress  

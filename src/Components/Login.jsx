@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react'
 import Header from './Header'
 import { ValidateEmailAndPassword, ValidateUserName } from '../Utils/Validator'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { auth } from '../Utils/firebase';
 const Login = () => {
     // Variables
     const [IsSignIn,setIsSignIn] = useState(true);
-    const [Message, setMessage] = useState(null);
+    const [ErrorMessage, setErrorMessage] = useState(null);
     const Email = useRef(null);
     const Password = useRef(null);
     const UserName = useRef(null);
@@ -13,6 +15,7 @@ const Login = () => {
     // Toggle sign in to create two both sign in and sign up using the state variables 
     const toggleSignInButton = () => {
         setIsSignIn(!IsSignIn);
+        setMessage(null);
     }
 
     // form Validation
@@ -22,7 +25,38 @@ const Login = () => {
       const userNameValue = UserName.current?.value || ""; // in case of SignIn mode
   
       const message = ValidateEmailAndPassword(emailValue, passwordValue);
-      setMessage(message);
+      setErrorMessage(message);
+
+      if(message) return;
+
+      // User not signed in
+      if(!IsSignIn){
+        createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+          .then((userCredential) => {
+            // Signed up 
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setErrorMessage(error + errorMessage);
+          });
+      }
+      else{
+
+        signInWithEmailAndPassword(auth, emailValue, passwordValue)
+          .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setErrorMessage(errorCode + errorMessage);
+          });
+      }
   }
     
     
@@ -43,10 +77,10 @@ const Login = () => {
         }
         <input ref={Email} type="text" placeholder='Email Address' className='p-2 my-2 bg-gray-700 w-full text-white' />
         <input ref={Password} type="password" placeholder='password' className='p-2 my-2 bg-gray-700 w-full text-white'/>
-        <p className='text-2xl text-red-500 font-bold'>{Message}</p>
+        <p className='text-2xl text-red-500 font-bold'>{ErrorMessage}</p>
         
         <button className='p-4 my-2 bg-red-700 text-white w-full' onClick={HandleButtonClick}>Sign In</button>
-        <p className='py-4 text-white' onClick={toggleSignInButton}>
+        <p className='cursor-pointer py-4 text-white' onClick={toggleSignInButton}>
             {IsSignIn ? "New to Netflix? Sign Up Now!" : "Already Registered User! Sign In Now"} 
         </p>
       </form>
