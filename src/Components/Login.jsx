@@ -1,9 +1,15 @@
 import React, { useRef, useState } from 'react'
 import Header from './Header'
 import { ValidateEmailAndPassword, ValidateUserName } from '../Utils/Validator'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile} from "firebase/auth";
 import { auth } from '../Utils/firebase';
+import { useNavigate } from 'react-router';
+import { X_IMG } from '../Utils/constants';
+import { useDispatch } from 'react-redux';
+import { AddUser } from '../Utils/UserSlice';
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
     // Variables
     const [IsSignIn,setIsSignIn] = useState(true);
     const [ErrorMessage, setErrorMessage] = useState(null);
@@ -15,7 +21,6 @@ const Login = () => {
     // Toggle sign in to create two both sign in and sign up using the state variables 
     const toggleSignInButton = () => {
         setIsSignIn(!IsSignIn);
-        setMessage(null);
     }
 
     // form Validation
@@ -35,7 +40,16 @@ const Login = () => {
           .then((userCredential) => {
             // Signed up 
             const user = userCredential.user;
-            console.log(user);
+            updateProfile(user, {
+              displayName: userNameValue, photoURL: X_IMG,
+            }).then(() => { 
+              const {uid,email,displayName, photoURL} = auth.currentUser;
+              dispatch(AddUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
+              navigate('/Browse');
+            }).catch((error) => {
+              setErrorMessage(error);
+            });
+
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -49,7 +63,15 @@ const Login = () => {
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
-            console.log(user);
+            updateProfile(user, {
+              displayName: userNameValue, photoURL: X_IMG,
+            }).then(() => { 
+              const {uid,email,displayName, photoURL} = auth.currentUser;
+              dispatch(AddUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
+              navigate('/Browse');
+            }).catch((error) => {
+              setErrorMessage(error);
+            });
           })
           .catch((error) => {
             const errorCode = error.code;

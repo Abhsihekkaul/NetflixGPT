@@ -2,7 +2,8 @@
     - Setup through Vite 
     - Configuration of Tailwind CSS
     - configured the routing 
-    - 
+    - Sign in and sign up done 
+    - Implemented the Redux Store
 
 
 # work in progress  
