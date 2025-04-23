@@ -45,7 +45,6 @@ const Login = () => {
             }).then(() => { 
               const {uid,email,displayName, photoURL} = auth.currentUser;
               dispatch(AddUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
-              navigate('/Browse');
             }).catch((error) => {
               setErrorMessage(error);
             });
@@ -68,7 +67,6 @@ const Login = () => {
             }).then(() => { 
               const {uid,email,displayName, photoURL} = auth.currentUser;
               dispatch(AddUser({uid:uid, email:email, displayName:displayName, photoURL:photoURL}))
-              navigate('/Browse');
             }).catch((error) => {
               setErrorMessage(error);
             });
